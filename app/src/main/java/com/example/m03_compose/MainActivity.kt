@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             M03_composeTheme {
-                // A surface container using the 'background' color from the theme
                 MainScreen()
             }
         }
