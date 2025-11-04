@@ -18,7 +18,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen()
+            M03_composeTheme {
+                // A surface container using the 'background' color from the theme
+                MainScreen()
+            }
         }
     }
 }
@@ -26,10 +29,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun MainScreen() {
-    Text(
-        text = "Hello Compose!",
 
-    )
 }
 
 
