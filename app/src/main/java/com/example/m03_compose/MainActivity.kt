@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +24,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-                     MainScreen()
+            MaterialTheme{
+                MainScreen()
+            }
+
 
         }
     }
@@ -36,20 +40,24 @@ class MainActivity : ComponentActivity() {
     )
 @Composable
 fun MainScreen() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Button(
-        onClick = {}
-        )
-        {
-            Text(text = "Hello World!")
+    MaterialTheme {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            Button(
+
+                onClick = {}
+            )
+            {
+                Text(text = "Hello World!")
+            }
         }
     }
+
 }
 
 
