@@ -40,23 +40,7 @@ class MainActivity : ComponentActivity() {
     )
 @Composable
 fun MainScreen() {
-    MaterialTheme {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            Button(
 
-                onClick = {}
-            )
-            {
-                Text(text = "Hello World!")
-            }
-        }
-    }
 
 }
 
