@@ -61,4 +61,16 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json.v160)
+
+
+    // Coroutines Kotlin
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Lifecycle (lifecycleScope + viewModelScope)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v270)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    // WorkManager (pour les tâches asynchrones modernes)
+    implementation(libs.androidx.work.runtime.ktx)
 }
