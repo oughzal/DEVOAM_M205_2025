@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import java.time.LocalDate
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         keyboardType = KeyboardType.Number
                     ),
                     onValueChange = {
-                        secondes = it.toIntOrNull() ?: 60
+                        secondes = it.toIntOrNull() ?: 0
                     },
                     label = { Text("Alarm in secondes") }
                 )
@@ -61,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             val time = System.currentTimeMillis() + secondes * 1000
-                            val pendingIntent = buildPendingIntent(this@MainActivity, 0)
+                            val pendingIntent = buildPendingIntent(applicationContext, 0)
 
                             alarmManager.setAndAllowWhileIdle(
                                 AlarmManager.RTC_WAKEUP,
@@ -75,11 +78,18 @@ class MainActivity : ComponentActivity() {
                     }
                     Button(
                         onClick = {
-                            val pendingIntent = buildPendingIntent(this@MainActivity, 0)
+                            val pendingIntent = buildPendingIntent(applicationContext, 0)
                             alarmManager.cancel( pendingIntent)
                         }
                     ) {
                         Text("cancel Alarm")
+                    }
+                    Button(onClick = {
+                        val prayers = calculator.calculate(LocalDate.now())
+                        Toast.makeText(this@MainActivity, prayers.toString(), Toast.LENGTH_LONG).show()
+
+                    }) {
+                        Text("Get Prayer Times")
                     }
                 }
             }

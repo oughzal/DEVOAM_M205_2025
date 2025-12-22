@@ -14,7 +14,18 @@ data class PrayerTimes(
     val asr: LocalDateTime,
     val maghrib: LocalDateTime,
     val isha: LocalDateTime
-)
+) {
+    override fun toString(): String {
+        val formatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm")
+        return "date: ${fajr.toLocalDate()}\n" +
+                "Fajr: ${fajr.format(formatter)}\n" +
+                "Sunrise: ${sunrise.format(formatter)}\n" +
+                "Dhuhr: ${dhuhr.format(formatter)}\n" +
+                "Asr: ${asr.format(formatter)}\n" +
+                "Maghrib: ${maghrib.format(formatter)}\n" +
+                "Isha: ${isha.format(formatter)}"
+    }
+}
 
 /* ============================================================
  * ENUM : Méthode de calcul de Asr
@@ -91,7 +102,7 @@ class PrayerTimeCalculator(
         val declination = getSolarDeclination(jd)
         val equation = getEquationOfTime(jd)
 
-        val dhuhr = 12 + timeZoneOffset() - longitude / 15 - equation / 60
+        val dhuhr = 12 + timeZoneOffset(date) - longitude / 15.0 + equation / 60.0
 
         val fajr = dhuhr - hourAngle(-method.fajrAngle, declination)
         val sunrise = dhuhr - hourAngle(-0.833, declination)
@@ -152,8 +163,8 @@ class PrayerTimeCalculator(
         val a = (14 - m) / 12
         val y2 = y + 4800 - a
         val m2 = m + 12 * a - 3
-        return d + (153 * m2 + 2) / 5 +
-                365 * y2 + y2 / 4 - y2 / 100 + y2 / 400 - 32045.0
+        return d.toDouble() + (153.0 * m2 + 2) / 5.0 +
+                365.0 * y2 + y2 / 4.0 - y2 / 100.0 + y2 / 400.0 - 32045.0
     }
 
     private fun getSolarDeclination(jd: Double): Double {
@@ -169,15 +180,34 @@ class PrayerTimeCalculator(
 
     private fun getEquationOfTime(jd: Double): Double {
         val n = jd - 2451545.0
+
+        // Anomalie moyenne du Soleil
         val g = Math.toRadians((357.529 + 0.98560028 * n) % 360)
-        val q = Math.toRadians((280.459 + 0.98564736 * n) % 360)
-        val l = q + Math.toRadians(1.915) * sin(g) +
-                Math.toRadians(0.020) * sin(2 * g)
+
+        // Longitude moyenne du Soleil
+        val q = (280.459 + 0.98564736 * n) % 360
+
+        // Longitude vraie du Soleil
+        val l = q + 1.915 * sin(g) + 0.020 * sin(2 * g)
+
+        // Obliquité de l'écliptique
         val e = Math.toRadians(23.439)
 
-        return 4 * Math.toDegrees(
-            atan2(cos(e) * sin(l), cos(l))
-        )
+        // Ascension droite
+        val lRad = Math.toRadians(l)
+        var ra = Math.toDegrees(atan2(cos(e) * sin(lRad), cos(lRad)))
+
+        // Normaliser RA dans [0, 360]
+        ra = (ra + 360) % 360
+
+        // Équation du temps (en minutes)
+        var eqTime = 4 * (q - ra)
+
+        // Ajuster pour les discontinuités
+        if (eqTime > 20) eqTime -= 1440
+        if (eqTime < -20) eqTime += 1440
+
+        return eqTime
     }
 
     private fun hourAngle(angle: Double, declination: Double): Double {
@@ -207,8 +237,8 @@ class PrayerTimeCalculator(
         ) / 15
     }
 
-    private fun timeZoneOffset(): Double =
-        zoneId.rules.getOffset(Instant.now()).totalSeconds / 3600.0
+    private fun timeZoneOffset(date: LocalDate = LocalDate.now()): Double =
+        zoneId.rules.getOffset(date.atStartOfDay(zoneId).toInstant()).totalSeconds / 3600.0
 
     private fun toLocalDateTime(date: LocalDate, time: Double): LocalDateTime {
         val t = (time + 24) % 24
@@ -219,9 +249,10 @@ class PrayerTimeCalculator(
 }
 
 val calculator = PrayerTimeCalculator(
-    latitude = 33.5731,
-    longitude = -7.5898,
-    zoneId = ZoneId.of("Africa/Casablanca")
+    latitude = 32.9487952821122,
+    longitude = -5.66577036117201,
+    zoneId = ZoneId.of("Africa/Casablanca"),
+    method = PrayerCalculationMethods.MUSLIM_WORLD_LEAGUE
 )
 
-val prayers = calculator.calculate(LocalDate.now())
+val prayers = calculator.calculate(LocalDate.now())  
