@@ -98,15 +98,19 @@ class MainActivity : ComponentActivity() {
 }
 
 fun buildPendingIntent(context: Context, id : Int ): PendingIntent {
-    val intent = Intent(context, AlarmReceiver::class.java)
-    intent.action = "ALARM_ACTION"
-    intent.putExtra("ALARM_ID", id)
+    val intent = Intent(context, AlarmReceiver::class.java).apply {
+        action = "ACTION_ALARM_RING"
+        putExtra("ALARM_ID", id)
+    }
+
     return PendingIntent.getBroadcast(
         context,
         id,
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
+
+
 }
 
 
