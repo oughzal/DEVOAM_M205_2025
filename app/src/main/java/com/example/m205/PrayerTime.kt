@@ -217,3 +217,11 @@ class PrayerTimeCalculator(
         return date.atTime(hour, minute)
     }
 }
+
+val calculator = PrayerTimeCalculator(
+    latitude = 33.5731,
+    longitude = -7.5898,
+    zoneId = ZoneId.of("Africa/Casablanca")
+)
+
+val prayers = calculator.calculate(LocalDate.now())
