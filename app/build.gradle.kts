@@ -73,4 +73,10 @@ dependencies {
 
     // WorkManager (pour les tâches asynchrones modernes)
     implementation(libs.androidx.work.runtime.ktx)
+
+
+    val compose_version = "1.5.3"
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+0
 }
